@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -20,6 +21,21 @@ public class SecurityConfig {
         * http.설정2
         * http.설정3
         * return http.build();*/
+        http.formLogin((it) -> it
+                .loginPage("/members/login")
+                .defaultSuccessUrl("/")
+                .usernameParameter("email")
+                .failureUrl("/members/login/error")
+        );
+
+//        http.csrf(AbstractHttpConfigurer::disable);
+
+        http.logout((it) -> it
+                .logoutUrl("/members/logout")
+                .logoutSuccessUrl("/")
+        );
+
+
 
 
 
