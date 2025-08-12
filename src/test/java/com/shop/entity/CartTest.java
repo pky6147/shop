@@ -73,7 +73,7 @@ class CartTest {
         //Cart 테이블과 member 테이블 사이에 member_id FK를 조건으로 Join 하기
 
 
-        /*JPA관점*/
+        /*JPA관점*/ //이 위로 프록시
         Member foundMember = savedCart.getMember();
 
         System.out.println("저장하기 후 Cart의 주소값 "+savedCart.hashCode());

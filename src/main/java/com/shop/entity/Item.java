@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 
-public class Item {
+public class Item extends BaseEntity {
     @Id
     @Column(name ="item_id") //DB컬럼명
     @GeneratedValue(strategy = GenerationType.IDENTITY)//자동증가
@@ -36,7 +36,7 @@ public class Item {
     @Enumerated(EnumType.STRING)
     private ItemSellStatus itemSellStatus;
 
-    private LocalDateTime regTime;
-
-    private LocalDateTime updateTime;
+//    private LocalDateTime regTime;
+//
+//    private LocalDateTime updateTime;
 }

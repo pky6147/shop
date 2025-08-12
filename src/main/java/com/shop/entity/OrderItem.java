@@ -10,18 +10,18 @@ import java.time.LocalDateTime;
 @Table(name="order_item")
 @Getter
 @Setter
-public class OrderItem {
+public class OrderItem extends BaseEntity {
     @Id
     @Column(name="order_item_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY) // 기본값 즉시 로딩 (join한 결과)
     @JoinColumn(name="item_id")
     private Item item;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="order_id")
     private Order order;
 
@@ -29,8 +29,8 @@ public class OrderItem {
 
     private Integer count;
 
-    private LocalDateTime regTime;
-
-    private LocalDateTime updateTime;
+//    private LocalDateTime regTime;
+//
+//    private LocalDateTime updateTime;
 
 }
