@@ -12,7 +12,7 @@ public class ItemImgDto {
 
     private Long id;
     private String imgName;
-    private String orgImgName;
+    private String oriImgName;
     private String imgUrl;
     private String repImgYn;
 
@@ -20,8 +20,11 @@ public class ItemImgDto {
     private static ModelMapper modelMapper = new ModelMapper();
 
 
-    private static ItemImgDto of(ItemImg itemImg) {
+    public static ItemImgDto of(ItemImg itemImg) {
 //        ModelMapper mapper  = new ModelMapper();
         return modelMapper.map(itemImg, ItemImgDto.class);// modelmapper 사용해서 Entity > Dto 변환된 객체 반환
     }
+
+
+
 }

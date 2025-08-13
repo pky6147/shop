@@ -19,8 +19,14 @@ public class ItemImg {
     private Item item;
 
     private String imgName; // 서버에 저장된 이미지 파일명
-    private String orgImgName; // 원본 이미지 파일명
+    private String oriImgName; // 원본 이미지 파일명
     private String imgUrl; //이미지 조회 경로
     private String repImgYn; // 대표이미지 여부
 
+
+    public void updateItemImg(String orgImgName, String imgName, String imgUrl) {
+        this.oriImgName = orgImgName;
+        this.imgName = imgName;
+        this.imgUrl = imgUrl;
+    }
 }
