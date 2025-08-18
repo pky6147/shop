@@ -5,7 +5,7 @@ import com.shop.dto.ItemImgDto;
 import com.shop.entity.Item;
 import com.shop.entity.ItemImg;
 import com.shop.repository.ItemImgRepository;
-import com.shop.repository.ItemRepository;
+import com.shop.repository.item.ItemRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

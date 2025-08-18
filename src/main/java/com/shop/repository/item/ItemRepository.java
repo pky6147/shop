@@ -1,4 +1,4 @@
-package com.shop.repository;
+package com.shop.repository.item;
 
 import com.shop.entity.Item;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 //상속해서 자동 빈인식
-public interface ItemRepository extends JpaRepository<Item, Long> {
+public interface ItemRepository extends JpaRepository<Item, Long>, ItemRepositoryCustom {
     List<Item> findByItemNm(String itemNm);
     //select * from item where item_nm = ?
     List<Item> findByItemNmOrItemDetail(String itemNm, String itemDetail);
