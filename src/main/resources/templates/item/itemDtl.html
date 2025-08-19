@@ -65,8 +65,8 @@
                 <h3 th:name="totalPrice" id="totalPrice" class="font-weight-bold"></h3>
             </div>
             <div th:if="${item.itemSellStatus == T(com.shop.constant.ItemSellStatus).SELL}" class="text-right">
-                <button type="button" class="btn btn-light border border-primary btn-lg">장바구니 담기</button>
-                <button type="button" class="btn btn-primary btn-lg">주문하기</button>
+                <button type="button" class="btn btn-light border border-primary btn-lg" onclick="addCart()">장바구니 담기</button>
+                <button type="button" class="btn btn-primary btn-lg" onclick="order()">주문하기</button>
             </div>
             <div th:unless="${item.itemSellStatus == T(com.shop.constant.ItemSellStatus).SELL}" class="text-right">
                 <button type="button" class="btn btn-danger btn-lg">품절</button>
@@ -96,12 +96,49 @@
             });
         });
 
-        function calculateTotalPrice(){
-            var count = $("#count").val();
+        function calculateTotalPrice() {
             var price = $("#price").val();
-            var totalPrice = price*count;
+            var count = $("#count").val();
+            var totalPrice = price * count;      // 상품 가격 * 수량 = totalPrice
             $("#totalPrice").html(totalPrice + '원');
+        }
+        function order() {
+            var token = $("meta[name='_csrf']").attr("content")
+            var header = $("meta[name='_csrf_header']").attr("content")
+            // alert(header +":"+ token)
+            var paramData = {
+                itemId: $("#itemId").val(),
+                count: $("#count").val()
+            }
+
+            $.ajax({
+                url : "/order",
+                type : "POST",
+                data : JSON.stringify(paramData),
+                contentType : "application/json",
+                beforeSend  : function(xhr) {
+                    xhr.setRequestHeader(header, token)//헤더네임, 헤더값
+                },
+                error: function(jqXHR, status, error) {
+                    if(jqXHR.status == '401') {
+                        alert("로그인 후 이용해 주세요.")
+                        location.href= "/members/login";
+                    }
+                    else {
+                        alert(jqXHR.responseText)
+                    }
+                },
+                dataType : "json",
+                cache : false,
+                success : function (result, status) {
+                    alert("주문이 완료 되었습니다.");
+                    location.href="/";
+                }
+            })
         }
     </script>
 </th:block>
+
+
+
 </html>
