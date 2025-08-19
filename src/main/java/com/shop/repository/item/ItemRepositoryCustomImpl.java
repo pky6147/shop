@@ -1,15 +1,19 @@
 package com.shop.repository.item;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Wildcard;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.shop.constant.ItemSellStatus;
 import com.shop.dto.ItemSearchDto;
+import com.shop.dto.MainItemDto;
+import com.shop.dto.QMainItemDto;
 import com.shop.entity.Item;
 import com.shop.entity.QItem;
 import lombok.RequiredArgsConstructor;
 
 //import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.thymeleaf.util.StringUtils;
@@ -17,7 +21,10 @@ import org.thymeleaf.util.StringUtils;
 //import java.awt.print.Pageable;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
+
 import static com.shop.entity.QItem.item;
+import static com.shop.entity.QItemImg.itemImg;
 
 
 @RequiredArgsConstructor
@@ -99,8 +106,52 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
                 .limit(pageable.getPageSize())
                 .fetch();
 
-                        //조건 1~3 중 null이 들어가는 경우 무시생략 그 쿼리 없는 셈쳐라
+        Long totalCount = jpaQueryFactory.select(Wildcard.count).from(item)
+                .where(regDtsAfter(itemSearchDto.getSearchDateType()),
+                searchSellStatusEq(itemSearchDto.getSearchSellStatus()),
+        searchByLike(itemSearchDto.getSearchBy(), itemSearchDto.getSearchQuery()))
+        .fetchOne();
 
-        return null;
+        Optional<Long> total = Optional.ofNullable(totalCount);
+        return new PageImpl<>(content, pageable, total.orElse(0L));
+
+        //조건 1~3 중 null이 들어가는 경우 무시생략 그 쿼리 없는 셈쳐라
+
+
+    }
+
+    private BooleanExpression itemNumLike(String searchQuery) {
+        return StringUtils.isEmpty(searchQuery) ? null : item.itemNm.like("%" + searchQuery + "%");
+    }
+
+    @Override
+    public Page<MainItemDto> getMainItemPage(ItemSearchDto itemSearchDto, Pageable pageable) {
+        List<MainItemDto> content = jpaQueryFactory
+                .select(
+                        new QMainItemDto(
+                                item.id,
+                                item.itemNm,
+                                item.itemDetail,
+                                itemImg.imgUrl,
+                                item.price
+                        )
+                ).from(itemImg)
+                .innerJoin(itemImg.item, item)
+                .where(itemImg.repImgYn.eq("Y"))
+                .where(searchByLike("itemNm", itemSearchDto.getSearchQuery()))
+                .orderBy(item.id.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        Long totalCount = jpaQueryFactory
+                .select(Wildcard.count)
+                .from(itemImg)
+                .innerJoin(itemImg.item, item)
+                .where(itemImg.repImgYn.eq("Y"))
+                .where(searchByLike("itemNm", itemSearchDto.getSearchQuery()))
+                .fetchOne();
+        Optional<Long> total = Optional.ofNullable(totalCount);
+        return new PageImpl<>(content, pageable, total.orElse(0L));
     }
 }
