@@ -136,6 +136,41 @@
                 }
             })
         }
+
+        function addCart() {
+            var token = $("meta[name='_csrf']").attr("content")
+            var header = $("meta[name='_csrf_header']").attr("content")
+            // alert(header +":"+ token)
+            var paramData = {
+                itemId: $("#itemId").val(),
+                count: $("#count").val()
+            }
+
+            $.ajax({
+                url : "/cart",
+                type : "POST",
+                data : JSON.stringify(paramData),
+                contentType : "application/json",
+                beforeSend  : function(xhr) {
+                    xhr.setRequestHeader(header, token)//헤더네임, 헤더값
+                },
+                error: function(jqXHR, status, error) {
+                    if(jqXHR.status == '401') {
+                        alert("로그인 후 이용해 주세요.")
+                        location.href= "/members/login";
+                    }
+                    else {
+                        alert(jqXHR.responseText)
+                    }
+                },
+                dataType : "json",
+                cache : false,
+                success : function (result, status) {
+                    alert("상품을 장바구니에 담았습니다.");
+                    location.href="/";
+                }
+            })
+        }
     </script>
 </th:block>
 

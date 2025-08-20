@@ -55,6 +55,10 @@ public class Item extends BaseEntity {
         this.stockNumber = restStock;
     }
 
+    public void addStock(Integer stockNumber) {
+        this.stockNumber += stockNumber;
+    }
+
 //    private LocalDateTime regTime;
 //
 //    private LocalDateTime updateTime;

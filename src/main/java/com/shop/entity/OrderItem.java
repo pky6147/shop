@@ -47,4 +47,7 @@ public class OrderItem extends BaseEntity {
 //
 //    private LocalDateTime updateTime;
 
+    public void cancel() {
+        this.item.addStock(count);
+    }
 }

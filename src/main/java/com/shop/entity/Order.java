@@ -58,6 +58,13 @@ public class Order extends BaseEntity {
     }
 
 
+    public void cancelOrder() {
+        for( OrderItem orderItem : orderItems) {
+            orderItem.cancel();
+        }
+        this.orderStatus = OrderStatus.CANCEL;
+    }
+
 //    private LocalDateTime regTime;
 //
 //    private LocalDateTime updateTime;
